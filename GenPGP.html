@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PGP Key Generator</title>
+    <script src="https://onlinepgp.com/asset/openpgp.min.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        .container { width: 300px; margin: auto; }
+        input, button { width: 100%; margin: 5px 0; padding: 10px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>PGP Key Generator</h2>
+        <input type="text" id="name" placeholder="Full Name" required>
+        <input type="email" id="email" placeholder="Email" required>
+        <input type="password" id="password" placeholder="Password" required>
+        <button id="generate">Generate PGP Key</button>
+        <textarea id="output" rows="10" placeholder="Generated Key will appear here..." readonly></textarea>
+        <footer style="text-align:center; margin-top:10px;">
+            <small>coded by VeXana Corp (Mr.Vex)</small>
+        </footer>
+    </div>
+
+    <script>
+        document.getElementById('generate').addEventListener('click', async () => {
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            const options = {
+                userIds: [{ name: name, email: email }],
+                numBits: 2048,
+                passphrase: password
+            };
+
+            try {
+                const key = await openpgp.generateKey(options);
+                document.getElementById('output').value = `Private Key:\n${key.privateKeyArmored}\n\nPublic Key:\n${key.publicKeyArmored}`;
+            } catch (error) {
+                document.getElementById('output').value = `Error generating keys: ${error.message}`;
+            }
+        });
+    </script>
+</body>
+</html>
